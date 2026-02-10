@@ -1,0 +1,17 @@
+{
+  "name": "py-quest",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js",
+    "test": "node src/services/challengeFactory.test.js && node src/services/difficulty.test.js && node src/services/hintService.test.js && node src/services/progressService.test.js && node src/services/testHarness.test.js"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "eslint": "^8.0.0"
+  }
+}

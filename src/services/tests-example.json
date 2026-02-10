@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Single Addition",
+    "input": [5, 10],
+    "expected": 15,
+    "description": "Tests if sum(5, 10) returns 15"
+  },
+  {
+    "name": "Negative Addition",
+    "input": [-1, 1],
+    "expected": 0,
+    "description": "Tests if sum(-1, 1) returns 0"
+  },
+  {
+    "name": "Large Numbers",
+    "input": [1000, 2000],
+    "expected": 3000,
+    "description": "Tests if function handles large integers correctly"
+  }
+]

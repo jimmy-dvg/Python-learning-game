@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>py-quest | Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./src/styles/styles.css">
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <main role="main" class="d-flex align-items-center justify-content-center bg-light" style="min-height: 80vh;">
+        <div class="card shadow-sm" style="max-width: 400px; width: 100%;">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4" id="auth-title">Welcome Back</h2>
+                <form id="auth-form">
+                    <div class="mb-3" id="display-name-group" style="display: none;">
+                        <label class="form-label">Display Name</label>
+                        <input type="text" id="display-name" class="form-control" placeholder="Pythonista">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email address</label>
+                        <input type="email" id="email" class="form-control" required placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="password" class="form-control" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3" id="auth-submit">Login</button>
+                    <div class="text-center">
+                        <small id="auth-toggle-text">Don't have an account? <a href="#" id="auth-toggle">Register</a></small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { renderHeader } from './src/components/header.js';
+        import { login, register } from './src/services/authService.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHeader();
+            
+            const form = document.getElementById('auth-form');
+            const toggle = document.getElementById('auth-toggle');
+            const toggleText = document.getElementById('auth-toggle-text');
+            const title = document.getElementById('auth-title');
+            const submitBtn = document.getElementById('auth-submit');
+            const displayNameGroup = document.getElementById('display-name-group');
+
+            let isLogin = true;
+
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                isLogin = !isLogin;
+                title.innerText = isLogin ? 'Welcome Back' : 'Create Account';
+                submitBtn.innerText = isLogin ? 'Login' : 'Register';
+                toggle.innerText = isLogin ? 'Register' : 'Login';
+                toggleText.firstChild.textContent = isLogin ? "Don't have an account? " : "Already have an account? ";
+                displayNameGroup.style.display = isLogin ? 'none' : 'block';
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const displayName = document.getElementById('display-name').value;
+
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.innerText = 'Processing...';
+
+                    if (isLogin) {
+                        await login(email, password);
+                    } else {
+                        await register(email, password, displayName);
+                    }
+                    window.location.href = 'dashboard.html';
+                } catch (err) {
+                    alert(err.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = isLogin ? 'Login' : 'Register';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

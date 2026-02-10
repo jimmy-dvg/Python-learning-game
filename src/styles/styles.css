@@ -1,0 +1,95 @@
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --bg-dark: #212529;
+    --sidebar-width: 250px;
+    --header-height: 56px;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#app-container {
+    display: flex;
+    flex: 1;
+}
+
+/* Header Adjustments */
+header.navbar {
+    height: var(--header-height);
+    z-index: 1030;
+}
+
+/* Sidebar Styling */
+#sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-dark);
+    color: white;
+    transition: all 0.3s;
+    min-height: calc(100vh - var(--header-height));
+}
+
+#sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 1rem;
+}
+
+#sidebar .nav-link:hover,
+#sidebar .nav-link.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content Area */
+main {
+    flex: 1;
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: calc(-1 * var(--sidebar-width));
+        position: fixed;
+        height: 100%;
+        z-index: 1040;
+    }
+
+    #sidebar.show {
+        margin-left: 0;
+    }
+}
+
+footer {
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    padding: 1rem 0;
+}
+
+/* Challenge Player Styles */
+.code-font {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    background-color: #1e1e1e !important;
+    color: #d4d4d4 !important;
+    border: 1px solid #333;
+}
+
+.challenge-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.challenge-prompt {
+    color: #444;
+}
+
+#user-xp-display {
+    transition: all 0.3s ease;
+    display: inline-block;
+}
