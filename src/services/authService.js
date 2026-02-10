@@ -3,27 +3,7 @@
  * Handles user registration, login, logout, and session management.
  */
 
-// Note: Ensure @supabase/supabase-js is installed via npm
-// import { createClient } from '@supabase/supabase-js'
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
-
-// Mocking supabase client for initial setup
-// const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const supabase = {
-    auth: {
-        signUp: async () => ({ data: { user: { id: 'mock' } }, error: null }),
-        signInWithPassword: async () => ({ data: { user: { id: 'mock' } }, error: null }),
-        signOut: async () => ({ error: null }),
-        getUser: async () => ({ data: { user: { id: 'mock', email: 'user@example.com' } } })
-    },
-    from: () => ({
-        insert: async () => ({ error: null }),
-        update: async () => ({ error: null }),
-        select: () => ({ single: async () => ({ data: { role: 'player' } }) })
-    })
-};
+import { supabase } from './supabaseClient.js';
 
 /**
  * Registers a new user and creates their profile.

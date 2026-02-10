@@ -3,17 +3,7 @@
  * Handles recording challenge results and updating user stats.
  */
 
-// import { supabase } from './supabaseClient.js';
-
-const supabase = {
-    rpc: async (name, params) => {
-        console.log(`Calling RPC: ${name}`, params);
-        return { data: [{ new_xp: 120, total_completed: 5 }], error: null };
-    },
-    from: () => ({
-        insert: async () => ({ error: null })
-    })
-};
+import { supabase } from './supabaseClient.js';
 
 /**
  * Records a challenge submission and updates state.

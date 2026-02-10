@@ -3,23 +3,7 @@
  * Handles management tasks for challenges and user progress.
  */
 
-// import { supabase } from './supabaseClient.js';
-// import { check_is_admin } from './authService.js';
-
-const supabase = {
-    from: (table) => ({
-        select: () => ({
-            order: async () => ({ data: [], error: null })
-        }),
-        insert: async (data) => ({ data, error: null }),
-        update: () => ({
-            eq: async () => ({ error: null })
-        }),
-        delete: () => ({
-            eq: async () => ({ error: null })
-        })
-    })
-};
+import { supabase } from './supabaseClient.js';
 
 /**
  * Fetches all challenges for management.

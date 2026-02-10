@@ -3,21 +3,7 @@
  * Handles file uploads to Supabase Storage and profile updates.
  */
 
-// import { supabase } from './supabaseClient.js';
-
-const supabase = {
-    storage: {
-        from: () => ({
-            upload: async (path) => ({ data: { path }, error: null }),
-            getPublicUrl: (path) => ({ data: { publicUrl: `https://example.com/storage/${path}` } })
-        })
-    },
-    from: () => ({
-        update: () => ({
-            eq: async () => ({ error: null })
-        })
-    })
-};
+import { supabase } from './supabaseClient.js';
 
 /**
  * Uploads an avatar image and updates the user's profile.

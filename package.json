@@ -11,7 +11,10 @@
     "test": "node src/services/challengeFactory.test.js && node src/services/difficulty.test.js && node src/services/hintService.test.js && node src/services/progressService.test.js && node src/services/testHarness.test.js"
   },
   "devDependencies": {
-    "vite": "^5.0.0",
-    "eslint": "^8.0.0"
+    "eslint": "^8.0.0",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.3"
   }
 }
