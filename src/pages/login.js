@@ -1,5 +1,6 @@
 // Copilot: Logic for the login page
 import { login, register } from '../services/authService.js';
+import { demoLogin, syncLocalProgressToServer } from '../services/authService.demo.js';
 import { renderHeader } from '../components/header.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const form = document.getElementById('auth-form');
     const toggle = document.getElementById('auth-toggle');
+    const demoBtn = document.getElementById('demoBtn');
     const toggleText = document.getElementById('auth-toggle-text');
     const title = document.getElementById('auth-title');
     const submitBtn = document.getElementById('auth-submit');
@@ -28,6 +30,27 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleText.firstChild.textContent = isLogin ? "Don't have an account? " : "Already have an account? ";
             displayNameGroup.style.display = isLogin ? 'none' : 'block';
             document.getElementById('display-name').required = !isLogin;
+        });
+    }
+
+    if (demoBtn) {
+        demoBtn.addEventListener('click', async () => {
+            const errorDiv = document.getElementById('auth-error');
+            try {
+                errorDiv.classList.add('d-none');
+                demoBtn.disabled = true;
+                demoBtn.innerText = 'Initializing Demo...';
+
+                const user = await demoLogin();
+                await syncLocalProgressToServer(user.id);
+                
+                window.location.href = 'dashboard.html';
+            } catch (err) {
+                errorDiv.innerText = 'Demo Error: ' + err.message;
+                errorDiv.classList.remove('d-none');
+                demoBtn.disabled = false;
+                demoBtn.innerText = 'Try Demo Account';
+            }
         });
     }
 
