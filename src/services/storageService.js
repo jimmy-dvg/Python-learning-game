@@ -11,8 +11,8 @@ import { supabase, isSupabaseConfigured } from './supabaseClient.js';
 export async function uploadAvatar(userId, file) {
     if (!isSupabaseConfigured) throw new Error('Supabase not initialized');
     const fileExt = file.name.split('.').pop();
-    const fileName = `${userId}-${Math.random()}.${fileExt}`;
-    const filePath = `avatars/${fileName}`;
+    const fileName = `${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const filePath = `${userId}/${fileName}`;
 
     // 1. Upload to Supabase Storage bucket 'avatars'
     const { error: uploadError } = await supabase.storage

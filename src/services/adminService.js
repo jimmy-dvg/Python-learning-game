@@ -23,9 +23,28 @@ export async function adminGetChallenges() {
  * Creates or updates a challenge.
  */
 export async function adminUpsertChallenge(challenge) {
-    const { data, error } = await supabase.from('challenges').insert([challenge]);
+    checkSupabase();
+    const { data, error } = await supabase.from('challenges').upsert([challenge]);
     if (error) throw error;
     return data;
+}
+
+/**
+ * Deletes a challenge.
+ */
+export async function adminDeleteChallenge(challengeId) {
+    checkSupabase();
+    const { error } = await supabase.from('challenges').delete().eq('id', challengeId);
+    if (error) throw error;
+}
+
+/**
+ * Updates a user's role.
+ */
+export async function adminUpdateUserRole(userId, role) {
+    checkSupabase();
+    const { error } = await supabase.from('profiles').update({ role }).eq('id', userId);
+    if (error) throw error;
 }
 
 /**
@@ -44,7 +63,8 @@ export async function adminResetUserProgress(userId, challengeId) {
  * Fetches all user profiles and their total XP.
  */
 export async function adminGetUsers() {
-    const { data, error } = await supabase.from('profiles').select('id, display_name, xp').order('xp', { ascending: false });
+    checkSupabase();
+    const { data, error } = await supabase.from('profiles').select('id, display_name, xp, role').order('xp', { ascending: false });
     if (error) throw error;
     return data;
 }

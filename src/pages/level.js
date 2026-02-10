@@ -4,7 +4,7 @@ import { renderChallenge } from '../components/challengePlayer.js';
 import { getChallengesForLevel } from '../services/gameSchema.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    renderHeader();
+    await renderHeader();
     
     const container = document.getElementById('challenge-player-container');
     const challenges = getChallengesForLevel('variables');

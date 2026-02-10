@@ -3,7 +3,7 @@ import { renderHeader } from '../components/header.js';
 import { getCurrentUser, logout } from '../services/authService.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    renderHeader('header-container');
+    await renderHeader();
 
     const user = await getCurrentUser();
     if (!user) {

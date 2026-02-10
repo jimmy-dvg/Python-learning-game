@@ -4,7 +4,7 @@ import { uploadAvatar } from '../services/storageService.js';
 import { getCurrentUser } from '../services/authService.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    renderHeader();
+    await renderHeader();
     
     const user = await getCurrentUser();
     if (!user) {

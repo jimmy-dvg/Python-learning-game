@@ -6,6 +6,7 @@
     <title>py-quest | Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./src/styles/styles.css">
+    <link rel="stylesheet" href="./src/styles/admin.css">
 </head>
 <body>
     <div id="header-container"></div>
@@ -23,81 +24,108 @@
             <div class="container py-4">
                 <h1 class="mb-4">Admin Dashboard</h1>
 
-                <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+                <ul class="nav nav-tabs mb-4 admin-tab-header" id="adminTabs" role="tablist">
                     <li class="nav-item">
-                        <button class="nav-link active" id="challenges-tab" data-bs-toggle="tab" data-bs-target="#challenges" type="button">Challenges</button>
+                        <button class="nav-link active" id="cards-tab" data-bs-toggle="tab" data-bs-target="#cards-admin" type="button">Cards Admin</button>
                     </li>
                     <li class="nav-item">
-                        <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button">Users</button>
+                        <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users-admin" type="button">User Admin</button>
                     </li>
                 </ul>
 
                 <div class="tab-content">
-                    <!-- Challenges Section -->
-                    <div class="tab-pane fade show active" id="challenges">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h3>Manage Challenges</h3>
-                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addChallengeModal">Add Challenge</button>
+                    <!-- Cards Admin Section -->
+                    <div class="tab-pane fade show active" id="cards-admin">
+                        <div class="d-flex justify-content-between mb-3 align-items-center">
+                            <h3>Curriculum Cards</h3>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#challengeModal" id="btn-add-card">Add New Card</button>
                         </div>
-                        <table class="table table-hover bg-white shadow-sm border rounded">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Level</th>
-                                    <th>Prompt</th>
-                                    <th>Type</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="challenges-list">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
+                        <div class="admin-table-container">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Level</th>
+                                        <th>Prompt Preview</th>
+                                        <th>Type</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="challenges-list">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <!-- Users Section -->
-                    <div class="tab-pane fade" id="users">
-                        <h3>User Progress</h3>
-                        <table class="table table-hover bg-white shadow-sm border rounded">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>ID</th>
-                                    <th>Total XP</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="users-list">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
+                    <!-- User Admin Section -->
+                    <div class="tab-pane fade" id="users-admin">
+                        <h3>User Management</h3>
+                        <div class="admin-table-container">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>ID</th>
+                                        <th>XP</th>
+                                        <th>Role</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-list">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Add Challenge Modal -->
-    <div class="modal fade" id="addChallengeModal" tabindex="-1">
-        <div class="modal-dialog">
+    <!-- Challenge Modal (Add/Edit) -->
+    <div class="modal fade" id="challengeModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Challenge</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="challengeModalLabel">Challenge Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="add-challenge-form">
-                        <div class="mb-2">
-                            <label class="form-label">Challenge ID</label>
-                            <input type="text" class="form-control" name="id" required placeholder="var-2">
+                    <form id="challenge-form">
+                        <input type="hidden" id="challenge-is-new" value="true">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Challenge ID</label>
+                                <input type="text" class="form-control" id="form-challenge-id" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Level ID</label>
+                                <input type="text" class="form-control" id="form-level-id" required>
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <label class="form-label">Level ID</label>
-                            <input type="text" class="form-control" name="level_id" required placeholder="variables">
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" id="form-type">
+                                <option value="codeExercise">Code Exercise</option>
+                                <option value="multipleChoice">Multiple Choice</option>
+                                <option value="debuggingTask">Debugging Task</option>
+                            </select>
                         </div>
-                        <div class="mb-2">
+                        <div class="mb-3">
                             <label class="form-label">Prompt</label>
-                            <textarea class="form-control" name="prompt" required></textarea>
+                            <textarea class="form-control" id="form-prompt" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Starter Code</label>
+                            <textarea class="form-control" id="form-starter-code" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-2">Create Challenge</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 mt-2">Create Challenge</button>
                     </form>
