@@ -3,12 +3,17 @@
  * Handles management tasks for challenges and user progress.
  */
 
-import { supabase } from './supabaseClient.js';
+import { supabase, isSupabaseConfigured } from './supabaseClient.js';
+
+function checkSupabase() {
+    if (!isSupabaseConfigured) throw new Error('Supabase not initialized');
+}
 
 /**
  * Fetches all challenges for management.
  */
 export async function adminGetChallenges() {
+    checkSupabase();
     const { data, error } = await supabase.from('challenges').select('*').order('level_id');
     if (error) throw error;
     return data;

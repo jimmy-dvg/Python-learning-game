@@ -3,22 +3,34 @@
  * Handles user registration, login, logout, and session management.
  */
 
-import { supabase } from './supabaseClient.js';
+import { supabase, isSupabaseConfigured } from './supabaseClient.js';
 
 /**
- * Registers a new user and creates their profile.
+ * Helper to ensure Supabase is initialized.
+ */
+function checkSupabase() {
+    if (!isSupabaseConfigured) {
+        throw new Error('Supabase is not initialized. Please check your .env file and ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.');
+    }
+}
+
+/**
+ * Registers a new user. The profile is created automatically by a DB trigger.
  */
 export async function register(email, password, displayName) {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    checkSupabase();
+    // We pass displayName in options.data so the DB trigger can find it
+    const { data, error } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+            data: {
+                display_name: displayName
+            }
+        }
+    });
     if (error) throw error;
 
-    if (data.user) {
-        // Create profile entry
-        const { error: profileError } = await supabase
-            .from('profiles')
-            .insert([{ id: data.user.id, display_name: displayName, xp: 0 }]);
-        if (profileError) throw profileError;
-    }
     return data;
 }
 
@@ -26,6 +38,7 @@ export async function register(email, password, displayName) {
  * Log in an existing user.
  */
 export async function login(email, password) {
+    checkSupabase();
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     return data;
@@ -35,6 +48,7 @@ export async function login(email, password) {
  * Log out the current user.
  */
 export async function logout() {
+    checkSupabase();
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
 }
@@ -43,6 +57,7 @@ export async function logout() {
  * Get the current authenticated user session.
  */
 export async function getCurrentUser() {
+    if (!isSupabaseConfigured) return null;
     const { data: { user } } = await supabase.auth.getUser();
     return user;
 }
@@ -52,6 +67,7 @@ export async function getCurrentUser() {
  * RLS Note: Ensure the 'profiles' table has a 'role' column.
  */
 export async function assignRole(userId, role) {
+    checkSupabase();
     const { error } = await supabase
         .from('profiles')
         .update({ role })

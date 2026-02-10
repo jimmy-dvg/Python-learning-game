@@ -3,15 +3,13 @@
  * Handles recording challenge results and updating user stats.
  */
 
-import { supabase } from './supabaseClient.js';
+import { supabase, isSupabaseConfigured } from './supabaseClient.js';
 
 /**
  * Records a challenge submission and updates state.
- * 
- * @param {Object} entry - {userId, challengeId, levelId, result, xpEarned}
- * @returns {Promise<Object>} Updated progress summary.
  */
 export async function recordProgress({ userId, challengeId, result, xpEarned }) {
+    if (!isSupabaseConfigured) throw new Error('Supabase not initialized');
     // 1. Validate Input
     if (!userId || !challengeId) {
         throw new Error('Missing required progress data (userId or challengeId)');

@@ -110,8 +110,22 @@
     <script type="module">
         import { renderHeader } from './src/components/header.js';
         import { adminGetChallenges, adminGetUsers } from './src/services/adminService.js';
+        import { supabase } from './src/services/supabaseClient.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
+            // Check authorization
+            const { data: { user } } = await supabase.auth.getUser();
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('is_admin')
+                .eq('id', user?.id)
+                .single();
+
+            if (!profile?.is_admin) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
             renderHeader();
             
             // Populate Challenges

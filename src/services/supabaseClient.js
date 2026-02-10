@@ -5,7 +5,22 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase credentials missing. Ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in .env');
+  const errorMsg = 'Supabase credentials missing. Ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in .env';
+  console.error(errorMsg);
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create a proxy to provide a better error message if supabase is accessed without being initialized
+const client = (supabaseUrl && supabaseAnonKey) 
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : null;
+
+export const isSupabaseConfigured = !!client;
+
+export const supabase = new Proxy({}, {
+    get: (target, prop) => {
+        if (!client) {
+            throw new Error(`Supabase client error: Cannot access ".${prop}" because the client is not initialized. Please check your .env file.`);
+        }
+        return client[prop];
+    }
+});

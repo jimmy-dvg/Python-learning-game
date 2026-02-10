@@ -10,10 +10,18 @@
 <body>
     <div id="header-container"></div>
     
+    <div id="dev-warning" class="alert alert-warning m-3 d-none">
+        <strong>⚠️ Developer Warning:</strong> You are opening this file directly in the browser. 
+        Because this project uses modules and environment variables, you <strong>must</strong> run it using a local server.
+        <br><br>
+        Run <code>npm run dev</code> in your terminal and open the link provided (e.g., http://localhost:5173).
+    </div>
+
     <main role="main" class="d-flex align-items-center justify-content-center bg-light" style="min-height: 80vh;">
         <div class="card shadow-sm" style="max-width: 400px; width: 100%;">
             <div class="card-body p-4">
                 <h2 class="text-center mb-4" id="auth-title">Welcome Back</h2>
+                <div id="auth-error" class="alert alert-danger d-none" role="alert"></div>
                 <form id="auth-form">
                     <div class="mb-3" id="display-name-group" style="display: none;">
                         <label class="form-label">Display Name</label>
@@ -37,12 +45,22 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Check for file protocol immediately
+        if (window.location.protocol === 'file:') {
+            document.getElementById('dev-warning').classList.remove('d-none');
+        }
+    </script>
     <script type="module">
         import { renderHeader } from './src/components/header.js';
         import { login, register } from './src/services/authService.js';
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderHeader();
+            try {
+                renderHeader();
+            } catch (err) {
+                console.warn('Header rendering failed:', err);
+            }
             
             const form = document.getElementById('auth-form');
             const toggle = document.getElementById('auth-toggle');
@@ -61,6 +79,7 @@
                 toggle.innerText = isLogin ? 'Register' : 'Login';
                 toggleText.firstChild.textContent = isLogin ? "Don't have an account? " : "Already have an account? ";
                 displayNameGroup.style.display = isLogin ? 'none' : 'block';
+                document.getElementById('display-name').required = !isLogin;
             });
 
             form.addEventListener('submit', async (e) => {
@@ -68,8 +87,10 @@
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const displayName = document.getElementById('display-name').value;
+                const errorDiv = document.getElementById('auth-error');
 
                 try {
+                    errorDiv.classList.add('d-none');
                     submitBtn.disabled = true;
                     submitBtn.innerText = 'Processing...';
 
@@ -80,7 +101,8 @@
                     }
                     window.location.href = 'dashboard.html';
                 } catch (err) {
-                    alert(err.message);
+                    errorDiv.innerText = err.message;
+                    errorDiv.classList.remove('d-none');
                     submitBtn.disabled = false;
                     submitBtn.innerText = isLogin ? 'Login' : 'Register';
                 }

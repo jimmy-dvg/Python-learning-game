@@ -3,16 +3,13 @@
  * Handles file uploads to Supabase Storage and profile updates.
  */
 
-import { supabase } from './supabaseClient.js';
+import { supabase, isSupabaseConfigured } from './supabaseClient.js';
 
 /**
  * Uploads an avatar image and updates the user's profile.
- * 
- * @param {string} userId - Current user ID.
- * @param {File} file - The image file to upload.
- * @returns {Promise<string>} The public URL of the uploaded image.
  */
 export async function uploadAvatar(userId, file) {
+    if (!isSupabaseConfigured) throw new Error('Supabase not initialized');
     const fileExt = file.name.split('.').pop();
     const fileName = `${userId}-${Math.random()}.${fileExt}`;
     const filePath = `avatars/${fileName}`;
