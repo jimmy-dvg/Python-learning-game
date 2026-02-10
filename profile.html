@@ -58,44 +58,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module">
-        import { renderHeader } from './src/components/header.js';
-        import { uploadAvatar } from './src/services/storageService.js';
-        import { getCurrentUser } from './src/services/authService.js';
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            renderHeader();
-            
-            const user = await getCurrentUser();
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            const avatarInput = document.getElementById('avatar-input');
-            const avatarPreview = document.getElementById('avatar-preview');
-
-            avatarInput.addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                // local preview
-                const reader = new FileReader();
-                reader.onload = (e) => avatarPreview.src = e.target.result;
-                reader.readAsDataURL(file);
-
-                try {
-                    avatarPreview.style.opacity = '0.5';
-                    const publicUrl = await uploadAvatar(user.id, file);
-                    avatarPreview.src = publicUrl;
-                    alert('Profile picture updated!');
-                } catch (err) {
-                    alert('Upload failed: ' + err.message);
-                } finally {
-                    avatarPreview.style.opacity = '1';
-                }
-            });
-        });
-    </script>
+    <script type="module" src="./src/pages/profile.js"></script>
 </body>
 </html>

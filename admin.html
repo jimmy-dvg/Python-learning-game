@@ -107,52 +107,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module">
-        import { renderHeader } from './src/components/header.js';
-        import { adminGetChallenges, adminGetUsers } from './src/services/adminService.js';
-        import { supabase } from './src/services/supabaseClient.js';
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Check authorization
-            const { data: { user } } = await supabase.auth.getUser();
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('is_admin')
-                .eq('id', user?.id)
-                .single();
-
-            if (!profile?.is_admin) {
-                window.location.href = 'dashboard.html';
-                return;
-            }
-
-            renderHeader();
-            
-            // Populate Challenges
-            const challenges = await adminGetChallenges();
-            const challengeList = document.getElementById('challenges-list');
-            challengeList.innerHTML = challenges.length ? challenges.map(c => `
-                <tr>
-                    <td>${c.id}</td>
-                    <td>${c.level_id}</td>
-                    <td>${c.prompt.substring(0, 30)}...</td>
-                    <td>${c.type}</td>
-                    <td><button class="btn btn-sm btn-outline-danger">Delete</button></td>
-                </tr>
-            `).join('') : '<tr><td colspan="5" class="text-center">No challenges found.</td></tr>';
-
-            // Populate Users
-            const users = await adminGetUsers();
-            const usersList = document.getElementById('users-list');
-            usersList.innerHTML = users.length ? users.map(u => `
-                <tr>
-                    <td>${u.display_name}</td>
-                    <td>${u.id.substring(0, 8)}...</td>
-                    <td>${u.xp}</td>
-                    <td><button class="btn btn-sm btn-outline-warning">Reset Progress</button></td>
-                </tr>
-            `).join('') : '<tr><td colspan="4" class="text-center">No users registered yet.</td></tr>';
-        });
-    </script>
+    <script type="module" src="./src/pages/admin.js"></script>
 </body>
 </html>
